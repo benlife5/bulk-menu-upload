@@ -26,10 +26,13 @@ const OutputComponent = (props) => {
               <td>{meal["Meal"]}</td>
               <td>{meal["Dish Name(s)"]}</td>
               <td>{meal.Ingredients.join(", ")}</td>
-              <td>{meal.outputIngredients.map((normIngred) => props.lookup[normIngred])}</td>
+              <td>{meal.outputIngredients.map((normIngred, index) => props.lookup[normIngred] + (index !== meal.outputIngredients.length - 1? ", " : ""))}</td>
               {(props.title === "Auto Matches" || props.title === "Unable to Match") && <td>
                   {meal.matchedIngredients.map((match) => <p>{props.lookup[match.original]} to {props.lookup[match.matched]}</p>)}
                 </td>}
+              {(props.title === "Unable to Match") && <td>
+                  {meal.unMatchableIngredients.map((ingredient) => <p>{props.lookup[ingredient]}</p>)}
+                </td>}  
             </tr>
           );
         })}
