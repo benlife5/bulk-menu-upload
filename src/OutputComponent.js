@@ -2,7 +2,7 @@ const OutputComponent = (props) => {
   return(<table>
     <thead>
       <tr>
-        <th colspan="8">{props.title}</th>
+        <th colSpan="8">{props.title}</th>
       </tr>
       <tr>
         <th>Menu Title</th>
@@ -31,7 +31,7 @@ const OutputComponent = (props) => {
                   {meal.matchedIngredients.map((match) => <p>{props.lookup[match.original]} to {props.lookup[match.matched]}</p>)}
                 </td>}
               {(props.title === "Unable to Match") && <td>
-                  {meal.unMatchableIngredients.map((ingredient) => <p>{props.lookup[ingredient]}</p>)}
+                  {meal.unMatchableIngredients.map((ingredient, index) => props.lookup[ingredient] + (index !== meal.unMatchableIngredients.length - 1? ", " : ""))}
                 </td>}  
             </tr>
           );

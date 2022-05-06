@@ -1,11 +1,10 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback} from "react";
 import Papa from "papaparse";
 import FuzzySet from "fuzzyset.js";
 import OutputComponent from "./OutputComponent";
 
 function App() {
-  const [data, setData] = useState();
   const [ingredients, setIngredients] = useState(() => new Set());
   const [normalizedIngredientLookup, setNormalizedIngredientLookup] = useState(
     {}
@@ -14,7 +13,20 @@ function App() {
   const [autoMatches, setAutoMatches] = useState();
   const [failedMatches, setFailedMatches] = useState();
 
-  const loadIngredients = () => {
+  const normalizeString = useCallback((str) => {
+    let normalized = str.toLowerCase().trim().replaceAll(" ", "")
+    // regex from https://stackoverflow.com/questions/4328500/how-can-i-strip-all-punctuation-from-a-string-in-javascript-using-regex
+    normalized = normalized.replaceAll(/[.,/#!$%^&*;:{}=\-_`~()]/g,"") // removes all punction
+    normalized = normalized.replaceAll(/\s{2,}/g," ")  // removes extra spaces
+    if (normalizedIngredientLookup[normalized] === undefined) {
+      const newLookup = normalizedIngredientLookup
+      newLookup[normalized] = str
+      setNormalizedIngredientLookup(newLookup)
+    } 
+    return normalized;
+  }, [normalizedIngredientLookup]);
+
+  const loadIngredients = useCallback(() => {
     fetch("ingredients_list.csv")
       .then((res) => res.text())
       .then((res) => Papa.parse(res).data)
@@ -27,21 +39,11 @@ function App() {
         setIngredients(() => ingred);
         console.log(normalizedIngredientLookup)
       });
-  };
-
-  const normalizeString = (str) => {
-    const normalized = str.toLowerCase().trim().replaceAll(" ", "")
-    if (normalizedIngredientLookup[normalized] === undefined) {
-      const newLookup = normalizedIngredientLookup
-      newLookup[normalized] = str
-      setNormalizedIngredientLookup(newLookup)
-    } 
-    return normalized;
-  };
+  }, [normalizeString, normalizedIngredientLookup]);
 
   useEffect(() => {
     loadIngredients();
-  }, []);
+  }, [loadIngredients]);
 
   const upload = async (e) => {
     e.preventDefault();
@@ -102,7 +104,7 @@ function App() {
         meal.matchedIngredients = [];
         unMatchedIngredients.forEach((originalIngredient) => {
           const ingredient = normalizeString(originalIngredient)
-          let fuzzySetResult = fuzzySet.get(ingredient);
+          const fuzzySetResult = fuzzySet.get(ingredient);
           if (fuzzySetResult[0][0] < 0.5) {
             allMatched = false;
             meal.unMatchableIngredients.push(ingredient);
