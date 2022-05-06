@@ -37,9 +37,8 @@ function App() {
           ingred.add(normalizedIngredient);
         }
         setIngredients(() => ingred);
-        console.log(normalizedIngredientLookup)
       });
-  }, [normalizeString, normalizedIngredientLookup]);
+  }, [normalizeString]);
 
   useEffect(() => {
     loadIngredients();
@@ -134,8 +133,8 @@ function App() {
     return (
       <div className="App">
         <form onSubmit={(e) => upload(e)}>
-          <input type="file" label="Upload file" />
-          <input type="Submit" label="Upload" />
+          <input type="file" label="Choose file" />
+          <input type="Submit" label="Upload" value="Upload" />
         </form>
         <OutputComponent recipeSet={fullMatches} title={"Full Matches"} lookup={normalizedIngredientLookup} />
         <OutputComponent recipeSet={autoMatches} title={"Auto Matches"} lookup={normalizedIngredientLookup}/>
