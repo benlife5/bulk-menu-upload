@@ -1,70 +1,38 @@
-# Getting Started with Create React App
+# Bulk Menu Upload - Parkday Project - Ben Life
+## May 2022
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Approach
+My first goal was to import the ingredient list CSV and accept the user's upload CSV. Once I had those two files as variables, I knew I could work with the data to find matches. I processed the ingredients list into a Set object and parsed up the user upload into a regular object. I also normalized the strings by removing whitespace, punctuation, and capital letters so that matching could occur easier. I created a dictionary of normalized string to original string so that the output could display both.
 
-## Available Scripts
+After processing the input, I turned my attention to the matching process. First, I did a simple lookup in the ingredient Set to see if there was a direct match. Any ingredients that were found were moved into the matched category. If all ingredients were found, that meal was moved to the fully matched category. If there were ingredients that could not be directly matched, a fuzzy search was attempted. The search returned values between 0 and 1 and if the value was > 0.5, the system accepted it as a match because it was more likely than not to be a match. Meals were then split into auto-matched (all ingredients found directly or through the fuzzy search) or unable to match (at least one un-matchable ingredient)
 
-In the project directory, you can run:
+Finally, I displayed the outcome in a table.
 
-### `npm start`
+## Time Estimates
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+| Task | Estimated | Actual | Notes |
+| ---- | --------- | ------ | ----- |
+| Create repo | 10 min | 5 min | |
+| Import ingredients.csv into set | 15 min | 45 min | Was unfamiliar with importing local csv files into JS, parsing CSVs in JS, and Set objects so this took more time than expected |
+| Accept user input and parse CSV | 20 min | 15 min | Went smoother after learning the local import |
+| Build ingredient checker | 1 hr | 45 min | the FuzzySet package made this a lot easier |
+| Output results | 30 min | 30 min | This took longer than ideal -- had some trouble getting all the data I wanted in the right place |
+| Wrap-up | 30 min | 30 min | Added a few small things and did some important code cleanup |
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Challenges
 
-### `npm test`
+Going between the normalized versions of the strings and the original versions was more complicated than expect. I wanted to keep both but storing them both took some effort
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Also, just generally, I was still getting familiar with various JS and React functionality, so syntax/architecture sometimes slowed me down, but I could feel myself getting more comfortable/faster as the project progressed.
 
-### `npm run build`
+## Possible Improvements
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The system could benefit from calibration with different typical inputs. Changing the string normalization process as well as the fuzzy match threshold could affect how many ingredients directly match or match through the fuzzy search. The user could provide feedback on whether the matching should be more or less aggressive.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Another possible addition could be a CSV download containing all of the un-matchable meals. It would then be very easy for the user to fix the broken ingredients and try again.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Packages Used
 
-### `npm run eject`
+[PapaParse](https://www.papaparse.com) - Used to parse the CSV files (MIT License)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[fuzzySet.js](http://glench.github.io/fuzzyset.js/) Used to perform the fuzzy searches (PPL License -- might want to replace with similar library if used in commercial product)

@@ -16,7 +16,7 @@ function App() {
     (str) => {
       let normalized = str.toLowerCase().trim().replaceAll(" ", "");
       // regex from https://stackoverflow.com/questions/4328500/how-can-i-strip-all-punctuation-from-a-string-in-javascript-using-regex
-      normalized = normalized.replaceAll(/[.,/#!$%^&*;:{}=\-_`~()]/g, ""); // removes all punction
+      normalized = normalized.replaceAll(/[.,/#!$%^&*;:{}=\-_`~()]/g, ""); // removes all punctuation
       normalized = normalized.replaceAll(/\s{2,}/g, " "); // removes extra spaces
 
       if (normalizedIngredientLookup[normalized] === undefined) {
@@ -44,7 +44,7 @@ function App() {
       });
   }, [normalizeString]);
 
-  // Loads ingedients on component mount
+  // Loads ingredients on component mount
   useEffect(() => {
     loadIngredients();
   }, [loadIngredients]);
@@ -86,7 +86,7 @@ function App() {
     });
   };
 
-  // performs the ingreident mathcing
+  // performs the ingredient matching
   const match = (input) => {
     const alreadyCorrect = [];
     const matched = [];
@@ -99,7 +99,7 @@ function App() {
       let fullSuccess = true;
       meal.outputIngredients = [];
 
-      // Determine if the ingreident is matches 1:1 or needs to be auto-matched
+      // Determine if the ingredient is matches 1:1 or needs to be auto-matched
       meal.Ingredients.forEach((originalIngredient) => {
         const ingredient = normalizeString(originalIngredient);
         if (!ingredients.has(ingredient)) { // if the ingredient is not in the set, it will need to be auto-matched
@@ -110,7 +110,7 @@ function App() {
         }
       });
 
-      if (fullSuccess) {  // all ingreidnets matched 1:1
+      if (fullSuccess) {  // all ingredients matched 1:1
         alreadyCorrect.push(meal);
       } else {
         // Perform the auto-matching
